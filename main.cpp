@@ -13,7 +13,8 @@ int main()
     //number of steps n
     //steplengh h
 
-    double tolerance = 10^-8;
+    double tolerance = pow(10, -8);
+    cout << "The tolerance is " << tolerance << endl;
     int dimension, n;
 
     cout << "Type in dimension: ";
@@ -24,7 +25,7 @@ int main()
     double pmax=5; // later cin????
     double h=pmax/n;
 
-    double off; // sum over all offdiagonal elements
+//    double off; // sum over all offdiagonal elements
     double maxoff; // maximum of all offdiagonal elements
     //double maxoffde; // MaximumOFFDiagonalElement
     int l, k; // position of largest element
@@ -60,30 +61,22 @@ int main()
    // ///
 
 
-   maxoff = 0; // calculate first value for maximum of offdiagonal elements
-   for(int i=0; i<n; i++){
-       for(int j=0; j<n; j++){
-           if(i!=j){
-               if(matrix[i][j] > maxoff){
-                   maxoff = matrix[i][j];
-                   l = i;
-                   k = j;
-               }
-           }
-       }
-   } //end of calculating first maxoff
+   maxoff = -1./(h*h) ; // set initial values
+   k = 0;
+   l = 1;
+
    cout << "first maxoff= " << maxoff << endl;
 
 // diagonalize till maximum is smaller than tolerance
-   while (maxoff > tolerance){
+   while (fabs(maxoff) > tolerance){
        //first part
        if(matrix[k][l] != 0){
           tau = (matrix[l][l] - matrix[k][k]) / (2*matrix[k][l]);
           if(tau > 0){
-             t = 1.0/(tau + sqrt(1.0 + tau*tau)); //  where from???!!!!
+             t = 1.0/(tau + sqrt(1.0 + tau*tau));
           }
           else{
-             t = -1.0/(-tau + sqrt(1.0 + tau*tau)); // where from?????!!!
+             t = -1.0/(-tau + sqrt(1.0 + tau*tau));
           }
           c = 1/(sqrt(1+t*t));
           s = c*t;
@@ -96,7 +89,9 @@ int main()
        double helpkk = matrix[k][k];
        double helpll = matrix[l][l];
        matrix[k][k] = helpkk*c*c - 2*c*s*matrix[k][l]+s*s*helpll;
-       matrix[l][l] = helpll*c*c - 2*c*s*matrix[k][l]+s*s*helpkk;
+       matrix[l][l] = helpkk*s*s - 2*c*s*matrix[k][l]+c*c*helpll;
+       matrix[l][k]= 0.0;
+       matrix[k][l]= 0.0;
        // calculate new non k,l matrix elememts
        for(int i=0; i<n; i++){
            if(i!=k && i!= l){
@@ -114,16 +109,25 @@ int main()
        for(int i=0; i<n; i++){
            for(int j=0; j<n; j++){
                if(i!=j){
-                   if(matrix[i][j] > maxoff){
+                   if(fabs(matrix[i][j]) > fabs(maxoff)){
                        maxoff = matrix[i][j];
-                       l = i;
-                       k = j;
+                       k = i;
+                       l = j;
                    }
                }
            }
        } //end of calculating next maxoff
    }
-
+   //print out the diagonalized matrix
+       cout << "new maxoff is " << maxoff << "kl" << k << l << endl;
+   cout << endl << endl;
+   for(int i=0; i<n; i++){
+      for(int j=0; j<n; j++){
+      cout << matrix[i][j] << "    ";
+       }
+   cout <<endl << endl;
+   }//end of print out
+/*
 // diagonalize till sum over offd. elements is smaller than tolerance
    off = 0; // calculate first value for off
    for(int i=0; i<n; i++){
@@ -186,12 +190,7 @@ int main()
        }
    cout <<endl << endl;
    }
+   */
 return 0;
 
 }
-
-
-
-
-
-
