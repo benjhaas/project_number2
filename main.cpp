@@ -22,8 +22,8 @@ int main()
     n=dimension;
 
 
-    double pmax=5; // later cin????
-    double h=pmax/n;
+    double pmax = 5.0; // later cin????
+    double h=pmax/double(n);
 
 //    double off; // sum over all offdiagonal elements
     double maxoff; // maximum of all offdiagonal elements
@@ -70,26 +70,26 @@ int main()
 // diagonalize till maximum is smaller than tolerance
    while (fabs(maxoff) > tolerance){
        //first part
-       if(matrix[k][l] != 0){
-          tau = (matrix[l][l] - matrix[k][k]) / (2*matrix[k][l]);
+      // if(matrix[k][l] != 0){
+          tau = (matrix[l][l] - matrix[k][k]) / (2*matrix[k][l]);        
           if(tau > 0){
-             t = 1.0/(tau + sqrt(1.0 + tau*tau));
+            t = 1.0 / (tau + sqrt(1.0 + tau*tau));
           }
           else{
-             t = -1.0/(-tau + sqrt(1.0 + tau*tau));
+            t = -1.0 /(-tau + sqrt(1.0 + tau*tau));
           }
           c = 1/(sqrt(1+t*t));
           s = c*t;
-       }
-       else{
-          c = 1.0;
-          s = 0.0;
-       }
+
+    //  }else{
+      //    c = 1.0;
+        //  s = 0.0;
+       //}
        // calculating new k,l matrix elements
        double helpkk = matrix[k][k];
        double helpll = matrix[l][l];
        matrix[k][k] = helpkk*c*c - 2*c*s*matrix[k][l]+s*s*helpll;
-       matrix[l][l] = helpkk*s*s - 2*c*s*matrix[k][l]+c*c*helpll;
+       matrix[l][l] = helpkk*s*s + 2*c*s*matrix[k][l]+c*c*helpll;
        matrix[l][k]= 0.0;
        matrix[k][l]= 0.0;
        // calculate new non k,l matrix elememts
@@ -105,20 +105,19 @@ int main()
        }
        //end first part
 
-       maxoff = 0; // calculate the next value for maximum of offdiagonal elements
+       maxoff = 0.0; // calculate the next value for maximum of offdiagonal elements
        for(int i=0; i<n; i++){
-           for(int j=0; j<n; j++){
-               if(i!=j){
+           for(int j=i+1; j<n; j++){
                    if(fabs(matrix[i][j]) > fabs(maxoff)){
                        maxoff = matrix[i][j];
                        k = i;
                        l = j;
                    }
-               }
            }
+          // cout << maxoff << endl;
        } //end of calculating next maxoff
    }
-   //print out the diagonalized matrix
+   //print out the diagonalized matrix and eigenvalues
        cout << "new maxoff is " << maxoff << "kl" << k << l << endl;
    cout << endl << endl;
    for(int i=0; i<n; i++){
@@ -126,7 +125,61 @@ int main()
       cout << matrix[i][j] << "    ";
        }
    cout <<endl << endl;
-   }//end of print out
+   }
+
+   double eigenvalues[n];
+   //print eigenvalues
+   for(int i=0; i<n; i++){
+      for(int j=0; j<n; j++){
+          if(i==j){
+          cout << matrix[i][j] << endl;
+          eigenvalues[i] = matrix[i][j];
+          //cout << sortedelemnts[i] << endl;
+          }
+       }
+   }
+   //sort elemnts
+
+
+
+
+
+ /*  //crap:
+   double help = 0;
+   double position;
+   for(int i=0; i<n; i++){
+       for(int j=i; j<n; j++){
+           if(sortedelemnts[j] >= sortedelemnts[i-1])
+           help = sortedelemnts[j];
+           position = j;
+       }
+   } //end of crap
+*/
+
+
+   cout << endl << endl << endl << endl << endl;
+
+   double lowest, temp;
+   for(int i=0; i<n ; i++){
+           lowest = temp = eigenvalues[i];
+           int k = i;
+           for(int j=i+1; j<n; j++){
+               if( fabs(eigenvalues[j]) < fabs(lowest) ){
+               lowest = eigenvalues[j];
+               k = j;
+
+               }
+           }
+
+           eigenvalues[i] = lowest;
+           eigenvalues[k] = temp;
+           cout << eigenvalues[i] << endl;
+
+
+   }
+
+   //end of print out
+
 /*
 // diagonalize till sum over offd. elements is smaller than tolerance
    off = 0; // calculate first value for off
@@ -191,6 +244,11 @@ int main()
    cout <<endl << endl;
    }
    */
+
+
+
+
+
 return 0;
 
 }
