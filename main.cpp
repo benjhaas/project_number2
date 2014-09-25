@@ -30,14 +30,14 @@ int main()
     //double maxoffde; // MaximumOFFDiagonalElement
     int l, k; // position of largest element
     double tau, t, c, s; //tan(tetha), cos(theta), sin(theta)
+    double rik, ril; // temps for eigenvectors
 
 
 
 
 
 
-
-    //define matrix
+    //define main matrix
    double** matrix = new double*[n];
    for(int i=0; i<n; i++){
    matrix[i] = new double[n];
@@ -48,10 +48,27 @@ int main()
          if(i==j){matrix[i][j]=2./(h*h)+i*i*h*h;}
          if(i!=j){matrix[i][j]=0;}
          if(i==j+1||j==i+1){matrix[i][j]= -1./(h*h);}
-      cout << matrix[i][j] << "    ";
+     // cout << matrix[i][j] << "    ";
        }
-   cout <<endl << endl;
+  // cout <<endl << endl;
    } //end of matrix definition
+
+//cout << endl << endl << endl;
+
+   // define unity matrix
+   double** R = new double*[n];
+   for(int i=0; i<n; i++){
+       R[i] = new double[n];
+   }
+   for(int i=0; i<n; i++){
+       for(int j=0; j<n; j++){
+           if(i==j){
+               R[i][j] = 1;
+           } else {
+               R[i][j] = 0;
+           } //cout << R[i][j] << "    ";
+       } //cout << endl << endl;
+   } // end of unity matrix definition
 
 
    // ///////////////////////////
@@ -65,7 +82,7 @@ int main()
    k = 0;
    l = 1;
 
-   cout << "first maxoff= " << maxoff << endl;
+   //cout << "first maxoff= " << maxoff << endl;
 
 // diagonalize till maximum is smaller than tolerance
    while (fabs(maxoff) > tolerance){
@@ -102,6 +119,10 @@ int main()
                matrix[i][l] = helpil*c + helpik*s;
                matrix[l][i] = matrix[i][l];
            }
+           rik = R[i][k];
+           ril = R[i][l];
+           R[i][k] = c*rik - s*ril;
+           R[i][l] = c*ril + s*rik;
        }
        //end first part
 
@@ -117,28 +138,78 @@ int main()
           // cout << maxoff << endl;
        } //end of calculating next maxoff
    }
-   //print out the diagonalized matrix and eigenvalues
-       cout << "new maxoff is " << maxoff << "kl" << k << l << endl;
-   cout << endl << endl;
+
+
+
+
+   //print stuff
+
+/*   cout << endl << endl;
+   //print diagonalized matrix
+   cout << "this is the diagonalized matrix:" << endl;
    for(int i=0; i<n; i++){
       for(int j=0; j<n; j++){
       cout << matrix[i][j] << "    ";
        }
    cout <<endl << endl;
    }
-
-   double eigenvalues[n];
+*/
+  double eigenvalues[n];
    //print eigenvalues
    for(int i=0; i<n; i++){
       for(int j=0; j<n; j++){
           if(i==j){
-          cout << matrix[i][j] << endl;
+        //  cout << matrix[i][j] << endl;
           eigenvalues[i] = matrix[i][j];
           //cout << sortedelemnts[i] << endl;
           }
        }
    }
-   //sort elemnts
+
+    cout << endl << endl << endl << endl << endl << "this are the first 20 eigenvalues" << endl;
+
+   double lowest, temp;
+   double lowestv, tempv;
+   for(int i=0; i<n ; i++){
+           lowest = temp = eigenvalues[i];
+           int k = i;
+           for(int j=i+1; j<n; j++){
+               if( fabs(eigenvalues[j]) < fabs(lowest) ){
+               lowest = eigenvalues[j];
+               k = j;
+               }
+           }
+           eigenvalues[i] = lowest;
+           eigenvalues[k] = temp;
+
+
+
+           if(i < 20){
+           cout << eigenvalues[i] << endl;
+           }
+
+           for(int m=0; m<n ; m++){
+                      temp = R[m][i];
+                      R[m][i] = R[m][k];
+                      R[m][k] = temp;
+                  }
+   }
+   cout << endl << endl;
+   for(int i=0; i<n; i++){//just print first 20 eigenvectors (2)
+   cout << i << " "<< R[i][0] << endl;
+   }
+
+   cout << endl << endl << endl;
+
+/*   //print basis
+   cout << "this is the basis" << endl;
+   for(int i=0; i<n; i++){
+      for(int j=0; j<n; j++){
+      cout << R[i][j] << "    ";
+       }
+   cout <<endl << endl;
+   }
+*/
 
 
 
@@ -157,26 +228,6 @@ int main()
 */
 
 
-   cout << endl << endl << endl << endl << endl;
-
-   double lowest, temp;
-   for(int i=0; i<n ; i++){
-           lowest = temp = eigenvalues[i];
-           int k = i;
-           for(int j=i+1; j<n; j++){
-               if( fabs(eigenvalues[j]) < fabs(lowest) ){
-               lowest = eigenvalues[j];
-               k = j;
-
-               }
-           }
-
-           eigenvalues[i] = lowest;
-           eigenvalues[k] = temp;
-           cout << eigenvalues[i] << endl;
-
-
-   }
 
    //end of print out
 
