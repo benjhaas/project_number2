@@ -1,7 +1,22 @@
 #include <iostream>
 #include <cmath>
+#include <fstream>
 
 using namespace std;
+
+
+void write(int n, char *file, double** R){
+ofstream resout;
+resout.open(file);
+for (int i=0; i<n; i++){
+    resout << i; // put
+    for(int j=0; j<10; j++){
+         resout  << "   " << R[i][j] << "   "; //removed i
+    }
+    resout << endl;
+}
+resout.close();
+}
 
 
 int main()
@@ -169,7 +184,6 @@ int main()
     cout << endl << endl << endl << endl << endl << "this are the first 20 eigenvalues" << endl;
 
    double lowest, temp;
-   double lowestv, tempv;
    for(int i=0; i<n ; i++){
            lowest = temp = eigenvalues[i];
            int k = i;
@@ -201,6 +215,11 @@ int main()
 
    cout << endl << endl << endl;
 
+   //write the file
+   write(n, "try.txt", R);
+
+
+
 /*   //print basis
    cout << "this is the basis" << endl;
    for(int i=0; i<n; i++){
@@ -210,94 +229,6 @@ int main()
    cout <<endl << endl;
    }
 */
-
-
-
-
-
- /*  //crap:
-   double help = 0;
-   double position;
-   for(int i=0; i<n; i++){
-       for(int j=i; j<n; j++){
-           if(sortedelemnts[j] >= sortedelemnts[i-1])
-           help = sortedelemnts[j];
-           position = j;
-       }
-   } //end of crap
-*/
-
-
-
-   //end of print out
-
-/*
-// diagonalize till sum over offd. elements is smaller than tolerance
-   off = 0; // calculate first value for off
-   for(int i=0; i<n; i++){
-       for(int j=0; j<n; j++){
-           if(j!=i){
-               off = sqrt(off + matrix[i][j] * matrix[i][j]);
-           }
-       }
-   } // end of calculating first off
-   while(off > tolerance){
-
-       //second part
-       if(matrix[k][l] != 0){
-          tau = (matrix[l][l] - matrix[k][k]) / (2*matrix[k][l]);
-          if(tau > 0){
-             t = 1.0/(tau + sqrt(1.0 + tau*tau)); //  where from???!!!!
-          }
-          else{
-             t = -1.0/(-tau + sqrt(1.0 + tau*tau)); // where from?????!!!
-          }
-          c = 1/(sqrt(1+t*t));
-          s = c*t;
-       }
-       else{
-          c = 1.0;
-          s = 0.0;
-       }
-       // calculating new k,l matrix elements
-       double helpkk = matrix[k][k];
-       double helpll = matrix[l][l];
-       matrix[k][k] = helpkk*c*c - 2*c*s*matrix[k][l]+s*s*helpll;
-       matrix[l][l] = helpll*c*c - 2*c*s*matrix[k][l]+s*s*helpkk;
-       // calculate new non k,l matrix elememts
-       for(int i=0; i<n; i++){
-           if(i!=k && i!= l){
-               double helpik = matrix[i][k];
-               double helpil =  matrix[i][l];
-               matrix[i][k] = helpik*c - helpil*s;
-               matrix[k][i] = matrix[i][k];
-               matrix[i][l] = helpil*c + helpik*s;
-               matrix[l][i] = matrix[i][l];
-           }
-       }
-       //end second part
-
-
-       off = 0; // calculate next value for off
-       for(int i=0; i<n; i++){
-           for(int j=0; j<n; j++){
-               if(j!=i){
-                   off = sqrt(off + matrix[i][j] * matrix[i][j]);
-               }
-           }
-       } // end of calculating next off
-
-   }//end of matrix diagonalization
-   for(int i=0; i<n; i++){
-      for(int j=0; j<n; j++){
-      cout << matrix[i][j] << "    ";
-       }
-   cout <<endl << endl;
-   }
-   */
-
-
-
 
 
 return 0;
