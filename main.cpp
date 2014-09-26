@@ -9,9 +9,9 @@ void write(int n, char *file, double** R){
 ofstream resout;
 resout.open(file);
 for (int i=0; i<n; i++){
-    resout << i; // put
+    resout << i;
     for(int j=0; j<10; j++){
-         resout  << "   " << R[i][j] << "   "; //removed i
+         resout  << "   " << R[i][j] << "   ";
     }
     resout << endl;
 }
@@ -101,7 +101,6 @@ int main()
 
 // diagonalize till maximum is smaller than tolerance
    while (fabs(maxoff) > tolerance){
-       //first part
       // if(matrix[k][l] != 0){
           tau = (matrix[l][l] - matrix[k][k]) / (2*matrix[k][l]);        
           if(tau > 0){
@@ -139,7 +138,7 @@ int main()
            R[i][k] = c*rik - s*ril;
            R[i][l] = c*ril + s*rik;
        }
-       //end first part
+
 
        maxoff = 0.0; // calculate the next value for maximum of offdiagonal elements
        for(int i=0; i<n; i++){
@@ -157,7 +156,11 @@ int main()
 
 
 
-   //print stuff
+    // /////////////////////////////
+    // /////
+    // ////      print stuff
+    // ///
+
 
 /*   cout << endl << endl;
    //print diagonalized matrix
@@ -181,7 +184,7 @@ int main()
        }
    }
 
-    cout << endl << endl << endl << endl << endl << "this are the first 20 eigenvalues" << endl;
+//    cout << endl << endl << endl << endl << endl << "this are the first 20 eigenvalues" << endl;
 
    double lowest, temp;
    for(int i=0; i<n ; i++){
@@ -199,7 +202,7 @@ int main()
 
 
            if(i < 20){
-           cout << eigenvalues[i] << endl;
+          // cout << eigenvalues[i] << endl;
            }
 
            for(int m=0; m<n ; m++){
@@ -210,7 +213,7 @@ int main()
    }
    cout << endl << endl;
    for(int i=0; i<n; i++){//just print first 20 eigenvectors (2)
-   cout << i << " "<< R[i][0] << endl;
+//   cout << i << " "<< R[i][0] << endl;
    }
 
    cout << endl << endl << endl;
@@ -229,6 +232,32 @@ int main()
    cout <<endl << endl;
    }
 */
+//end of printing stuff
+
+
+
+   // ///////////////////////////////////////////////////
+   // //////
+   // /////      testing errors for lowest 3 eigenvalues
+   // ////
+   // ///
+   // //
+
+
+
+
+   double analytic1 = 3;
+   double analytic2 = 7;
+   double analytic3 = 11;
+   double runningpmax[10];
+
+   for(int i=3; i<13; i++){
+       runningpmax[i] = i*1.0;
+       cout << runningpmax[i];
+   }
+
+
+
 
 
 return 0;
